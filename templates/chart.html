@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<h2>
+  {% for type in charts %}
+  {% if type == chart_type %}
+  {% if type == "polarArea" %}
+  Polar Area Chart Page
+  {% else %}
+  {{ type.title }} Chart Page
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+</h2>
+
+<form id="chartForm" action="{% url 'chart' %}" method="post" novalidate onSubmit="return checkDate()">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-3">
+      Select a chart type:
+      <br>
+      <select name="chart_type" class="form-control" onchange="attemptFormSubmit()" style="max-width:150px;">
+        {% for type in charts %}
+        {% if type == chart_type %}
+        <option value="{{ type }}" selected="selected">
+          {% if type == "polarArea" %}
+          Polar Area
+          {% else %}
+          {{ type.title }}
+          {% endif %}
+        </option>
+        {% else %}
+        <option value="{{ type }}">
+          {% if type == "polarArea" %}
+          Polar Area
+          {% else %}
+          {{ type.title }}
+          {% endif %}
+        </option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-3">
+      Group by:
+      <br>
+      <div>
+        <input name="group_by" id="merchant" type="radio" value="merchant" {{merch_select}} onchange="attemptFormSubmit()">
+        <label for="merchant">Merchant</label>
+      </div>
+      <div>
+        <input name="group_by" id="category" type="radio" value="category" {{ctgry_select}} onchange="attemptFormSubmit()">
+        <label for="category">Category</label>
+      </div>
+      <div>
+        <input name="group_by" id="date" type="radio" value="date" {{date_select}} onchange="attemptFormSubmit()">
+        <label for="date">Date</label>
+      </div>
+      <br>
+    </div>
+    <div class="col-3">
+      Filter by date range:
+      <br />
+      <label for="date_range_start">
+        Start
+        <input id="date_range_start" name="date_range_start" type="date" value="{{date_range_start}}" onchange="checkDate()">
+      </label>
+      <p id="date_range_error" hidden>Invalid start date</p>
+      <br />
+      <label for="date_range_end">
+        End
+        <input id="date_range_end" name="date_range_end" type="date" value="{{date_range_end}}" onchange="checkDate()">
+      </label>
+    </div>
+    <div class="col-3 text-right">
+      <input class="btn btn-primary mr-0" id="submitButton" type="submit" value="Submit">
+    </div>
+  </div>
+</form>
+
+{% if label_size == 0 %}
+<h3>No transaction data available.</h3>
+{% else %}
+<h3>{{chart_type.title}}</h3>
+<canvas id="pie-chart"></canvas>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+  var chartForm = document.getElementById("chartForm");
+  var submitButton = document.getElementById("submitButton");
+  var date_range_error = document.getElementById("date_range_error");
+  var dateStart = document.getElementById("date_range_start");
+  var dateEnd = document.getElementById("date_range_end");
+
+  function checkDate(){
+    if(dateStart.value > dateEnd.value){
+      dateStart.style.borderColor = 'red';
+      dateEnd.style.borderColor = 'red';
+      submitButton.disabled = true;
+      submitButton.style.cursor = 'not-allowed';
+      date_range_error.hidden = false;
+      return false
+    }
+    dateStart.style.borderColor = 'gray';
+    dateEnd.style.borderColor = 'gray';
+    submitButton.disabled = false;
+    submitButton.style.cursor = 'pointer';
+    date_range_error.hidden = true;
+    return true;
+  }
+
+  function attemptFormSubmit(){
+    if(checkDate()) chartForm.submit();
+  }
+
+  window.onload = function() {
+    var ctx = document.getElementById('pie-chart').getContext('2d');
+    window.myPie = new Chart(ctx, config);
+  };
+
+  /* Hide graph lines if not a bar/line graph*/
+  function compareStrings(str1) {
+    var result = str1.localeCompare('bar');
+    if(result == 0) return true;
+
+    result = str1.localeCompare('line');
+    if(result == 0) return true;
+
+    return false;
+  }
+
+  var displayAxis = true;
+  var chartType = '{{chart_type}}'
+  displayAxis = compareStrings(chartType)
+
+  colors = [
+    '#080614',
+    '#17123b',
+    '#271e62',
+    '#372a89',
+    '#4636b0',
+    '#4e3cc3',
+    '#604fc9',
+    '#6a5acd',
+    '#7163cf',
+    '#8376d5',
+    '#958adb',
+    '#a69de1',
+    '#b8b1e7',
+    '#cac4ed',
+    '#dcd8f3'
+  ]
+
+  var config = {
+    type: '{{chart_type | cut:' '}}',
+    axisX: {
+      title: "Red Color labels",
+      color: "red"
+    },
+    axisY: {
+      labelFontSize: 20
+    },
+    data: {
+      datasets: [{
+        data: {{ data|safe }},
+        backgroundColor: colors,
+        borderColor: 'darkgray',
+        borderWidth: 2
+      }],
+      labels: {{ labels|safe }},
+    },
+    options: {
+      legend: {
+        display: false,
+      },
+      scales: {
+        xAxes: [{
+          display: displayAxis,
+          ticks: {
+            callback: function(value, index, values){
+              if(Date.parse(value)){
+                var d = new Date(value);
+                var ye = d.getFullYear();
+                var mo = d.getMonth() + 1;
+                var da = d.getDate() + 1;
+                return mo + '/' + da + '/' + ye;
+              }
+              return value;
+            }
+          }
+        }],
+        yAxes: [{
+          display: displayAxis,
+          ticks: {
+            suggestedMin: 0,
+            callback: function(value, index, values){
+              return "$" + value;
+            }
+          }
+        }]
+      },
+      responsive: true,
+      tooltips: {
+        callbacks: {
+          title: function(tooltipItem, data){
+            /* Reformat date */
+            if(Date.parse(data.labels[tooltipItem[0].index])){
+              var oldDate = data.labels[tooltipItem[0].index];
+              var d = new Date(oldDate);
+              var ye = d.getFullYear();
+              var mo = d.getMonth() + 1;
+              var da = d.getDate() + 1;
+              return mo + '/' + da + '/' + ye;
+            }
+
+            return data.labels[tooltipItem[0].index];
+          },
+          label: function(tooltipItem, data) {
+            var label = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(data.datasets[0].data[tooltipItem.index]);
+
+            return label;
+          }
+        }
+      }
+    }
+  };
+
+</script>
+
+
+{% endblock %}

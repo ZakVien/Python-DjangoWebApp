@@ -1,0 +1,48 @@
+{% extends '../base.html' %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% block title %}View List{% endblock %}
+
+{% block content %}
+<h2>View Expenses</h2>
+
+{% if ls.count < 1 %}
+<br />
+<h3>You don't have any expenses</h3>
+{% else %}
+
+<table class="table table-striped text-center">
+    <thead>
+    <tr>
+        <th scope="col"><a href="?order_by=date">Date</a></th>
+        <th scope="col"><a href="?order_by=category">Category</a></th>
+        <th scope="col"><a href="?order_by=merchant">Merchant</a></th>
+        <th scope="col"><a href="?order_by=amount">Amount</a></th>
+        <th colspan="2" scope="col">Action</th>
+    </tr>
+    </thead>
+    {% if ls.count > 1 %}
+    {% for item in ls %}
+    <tr>
+        <td scope="row">{{item.date}}</td>
+        <td>{{item.category}}</td>
+        <td>{{item.merchant}}</td>
+        <td>${% if item.merchant != "Deposit" %}-{% endif %}{{item.amount|intcomma}}</td>
+        <td><a href="{% url 'edit' id=item.id %}" class="btn btn-primary">Update</a></td>
+        <td><a href="{% url 'remove' id=item.id %}" class="btn btn-danger">Remove</a></td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td scope="row">{{ls.date}}</td>
+        <td>{{ls.category}}</td>
+        <td>{{ls.merchant}}</td>
+        <td>${% if ls.category != 'Deposit' %}-{% endif %}{{ls.amount|intcomma}}</td>
+        <td><a href="{% url 'edit' id=ls.id %}" class="btn btn-warning">Update</a></td>
+        <td><a href="{% url 'remove' id=ls.id %}" class="btn btn-danger">Remove</a></td>
+    </tr>
+    {% endif %}
+</table>
+
+{% endif %}
+{% endblock %}

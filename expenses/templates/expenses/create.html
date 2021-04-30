@@ -1,0 +1,51 @@
+{% extends '../base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} New Expense {% endblock %}
+
+{% block content %}
+
+<h2>Create New Expense</h2>
+<div class="row">
+  <div class="col-3"></div>
+  <div class="col-6">
+    <form method="post" action="/create/">
+      {% csrf_token %}
+      {{form|crispy}}
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary" name="Save">Submit</button>
+        <a class="btn btn-warning" href="/">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+  <div class="col-3"></div>
+</div>
+
+<script>
+  var amountBox = document.getElementById("id_amount");
+
+  window.onload = function() {
+    amountBox.setAttribute("type", "text");
+    amountBox.addEventListener("keypress", function(e) {
+      if (isNaN(parseInt(e.key, 10)) &&
+          e.key !== "Backspace" &&
+          e.key !== "Enter" &&
+          e.key !== "."){
+            e.preventDefault();
+      }
+
+      if(amountBox.value.indexOf(".") !== -1){
+        if(e.key === ".") e.preventDefault();
+        if((amountBox.value.length > amountBox.value.indexOf(".") + 2) &&
+            e.key !== "Backspace" &&
+            e.key !== "Enter"){
+              e.preventDefault();
+        }
+      }
+    });
+  }
+
+</script>
+
+{% endblock %}

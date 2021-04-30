@@ -1,0 +1,59 @@
+/*
+body {
+    background-image: url('purple-black-background.jpg');
+}
+.container {
+    min-height: 100vh;
+    background-color: rgba(0, 0, 0, 0.98);
+}
+body, td, tr, nav a {
+    color: #958adb;
+    font-weight: 600;
+}
+*/
+a:hover, label:hover {
+    cursor: pointer;
+}
+#date_range_error {
+    color: red;
+    margin-bottom: 0;
+}
+/*
+select, option, .form-control, .form-control:focus {
+    background: #b8b1e7;
+    color: rgb(71, 54, 176);
+    font-weight: 600;
+    border-color: rgba(149, 138, 219, 0.6);
+}
+
+
+.btn-primary {
+    background: rgba(71, 54, 176, 0.6);
+    color: rgba(184, 177, 231, 1);
+    font-weight: 600;
+    border-color: rgba(149, 138, 219, 0.6);
+}
+.btn-primary:hover, .btn-primary:focus,
+.btn-primary:active:focus, .btn-primary.active {
+    background: rgba(71, 54, 176, 1);
+    color: rgba(184, 177, 231, 1);
+    border-color: rgba(149, 138, 219, 1);
+}
+
+.btn-danger {
+    background: rgba(131, 2, 101, 0.6);
+    color: rgba(255ssss, 255, 255, 0.8);
+    font-weight: 600;
+    border-color: rgba (131, 2, 101, 0.4);
+}
+.btn-danger:hover, .btn-danger:focus,
+.btn-danger:active:focus, .btn-danger.active {
+    background: rgba(181, 3, 140, 0.6);
+    color: rgba(255ssss, 255, 255, 0.8);
+    font-weight: 600;
+    border-color: rgba (131, 2, 101, 0.4);
+}
+.btn-warning:active:focus, .btn-warning.active {
+
+}
+*/
