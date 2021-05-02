@@ -1,0 +1,17 @@
+{% extends '../base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}User Login{% endblock %}
+
+{% block content %}
+
+<h2>Index Page</h2>
+  <form method="post" action="/">
+    {% csrf_token %}
+    {{form|crispy}}
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary" name="Save">Submit</button>
+      <a class="btn btn-warning" href="/">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

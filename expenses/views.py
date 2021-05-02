@@ -1,19 +1,28 @@
-from django.db import models
-from django.conf import settings
-from django.http import HttpResponseRedirect, QueryDict
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import ExpenseForm, DepositForm
-from .models import Expense, Category, Deposit
+from .models import Expense, Category
 import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import HttpResponse
+from git import Repo
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
+def webhook(request):
+    if request.method == 'POST':
+        repo = Repo('./django-schools')
+        git = repo.git
+        git.checkout('master')
+        git.pull()
+        return HttpResponse('pulled_success')
+    return HttpResponse('get_request', status=400)
 
-# Create your views here.
 
 def home(response):
-    return render(response, "expenses/index.html", {})
+    return render(response, "expenses/index.html", {"repo": Repo})
 
 
 class SignUpView(generic.CreateView):
