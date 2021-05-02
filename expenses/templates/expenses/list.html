@@ -1,11 +1,10 @@
 {% extends '../base.html' %}
 {% load bootstrap4 %}
 {% load humanize %}
-{% block title %}View List{% endblock %}
+{% block title %}Transactions{% endblock %}
 
 {% block content %}
-<h2>View Expenses</h2>
-
+<h2>Your Transactions</h2>
 {% if ls.count < 1 %}
 <br />
 <h3>You don't have any expenses</h3>

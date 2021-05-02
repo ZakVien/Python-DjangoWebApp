@@ -1,8 +1,13 @@
+from django.db import models
+from django.conf import settings
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import render, redirect
 from .forms import ExpenseForm, DepositForm
 from .models import Expense, Category, Deposit
 import datetime
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 
 
 # Create your views here.
@@ -11,11 +16,21 @@ def home(response):
     return render(response, "expenses/index.html", {})
 
 
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
+
+
 def deposit(response):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
     if response.method == "POST":
         form = DepositForm(response.POST)
 
         if form.is_valid():
+            account_id = response.user.id
             date = form.cleaned_data["date"]
             amount = form.cleaned_data["amount"]
             category = form.cleaned_data["category"]
@@ -24,6 +39,7 @@ def deposit(response):
                 category=category,
                 merchant='Deposit',
                 amount=amount,
+                account=account_id,
             )
             t.save()
             return redirect('view_all_expenses')
@@ -35,15 +51,20 @@ def deposit(response):
 
 
 def create(response):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
     if response.method == "POST":
         form = ExpenseForm(response.POST)
 
         if form.is_valid():
+            account_id = response.user.id
             date = form.cleaned_data["date"]
             category = form.cleaned_data["category"]
             merchant = form.cleaned_data["merchant"]
             amount = form.cleaned_data["amount"]
             t = Expense(
+                account=account_id,
                 date=date,
                 category=category,
                 merchant=merchant,
@@ -59,17 +80,26 @@ def create(response):
 
 
 def view_all_expenses(response):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
+    account_id = response.user.id
+    
     order_by = 'date'
     if response.GET.get('order_by'):
         order_by = response.GET.get('order_by')
 
-    ls = Expense.objects.all().order_by(order_by)
+    ls = Expense.objects.filter(account=account_id).order_by(order_by)
+
     if ls.count() == 1:
         ls = ls.first()
     return render(response, "expenses/list.html", {"ls": ls})
 
 
 def edit(response, id):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
     ls = Expense.objects.get(id=id)
     update_form = ExpenseForm(instance=ls)
 
@@ -96,12 +126,20 @@ def edit(response, id):
 
 
 def remove(response, id):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
     ls = Expense.objects.get(id=id)
     ls.delete()
     return HttpResponseRedirect("/expenses")
 
 
 def chart(response):
+    if not response.user.is_authenticated:
+        return redirect('login')
+
+    account_id = response.user.id
+
     charts = [
         'bar',
         'doughnut',
@@ -148,7 +186,7 @@ def chart(response):
 
         # If grouped by category
         if group_by == 'category':
-            queryset = Expense.objects.order_by('category')
+            queryset = Expense.objects.filter(account=account_id).order_by('category')
             # Loop through submitted expenses
             for item in queryset:
                 # If category isn't 'Deposit'
@@ -171,7 +209,7 @@ def chart(response):
                                     data.append(str(item.amount))
         # If grouped by merchant
         elif group_by == 'merchant':
-            queryset = Expense.objects.order_by('merchant')
+            queryset = Expense.objects.filter(account=account_id).order_by('merchant')
             # Loop through submitted expenses
             for item in queryset:
                 # If category isn't 'Deposit'
@@ -189,7 +227,7 @@ def chart(response):
                             data.append(str(item.amount))
         # If grouped by date (default for line graph)
         elif group_by == 'date':
-            queryset = Expense.objects.order_by('date')
+            queryset = Expense.objects.filter(account=account_id).order_by('date')
             # Loop through submitted expenses
             for item in queryset:
                 # If category isn't 'Deposit'
@@ -208,7 +246,7 @@ def chart(response):
 
     # If not "POST", pass default values
     else:
-        queryset = Expense.objects.order_by('merchant')
+        queryset = Expense.objects.filter(account=account_id).order_by('merchant')
         # Loop through submitted expenses
         for item in queryset:
             # If category isn't 'Deposit'

@@ -1,6 +1,19 @@
 {% extends '../base.html' %}
-{% block title %}Index{% endblock %}
+{% load crispy_forms_tags %}
+{% url 'user_login' as user_login_url %}
+{% url 'bar_chart' as bar_url %}
+
+{% block title %}Zach's Expense Tracker{% endblock %}
 
 {% block content %}
-<h2>Index Page</h2>
+
+<h2>Zach's Expense Tracker</h2>
+{% if not user.is_authenticated %}
+
+<p>Please
+  <a href="{% url 'login' %}">log in</a> or
+  <a href="{% url 'signup' %}">sign up</a> to continue.
+</p>
+
+{% endif %}
 {% endblock %}

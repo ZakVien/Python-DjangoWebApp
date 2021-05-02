@@ -4,18 +4,27 @@
 {% url 'view_all_expenses' as view_url %}
 {% url 'chart' as chart_url %}
 {% url 'bar_chart' as bar_url %}
+{% url 'login' as login %}
+{% url 'signup' as signup %}
+{% url 'logout' as logout %}
+
+
+
+
+
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-<!--    <a class="navbar-brand" href="#">Navbar</a>-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
+{% if not user.is_authenticated %}
             <li class="nav-item {% if request.path == home_url %} active {%endif%}">
                 <a class="nav-link" href="{{home_url}}">Home</a>
             </li>
+          {% else %}
             <li class="nav-item {% if request.path == deposit_url %} active {%endif%}">
                 <a class="nav-link" href="{{deposit_url}}">Add Deposit</a>
             </li>
@@ -25,14 +34,25 @@
             <li class="nav-item {% if request.path == view_url %} active {%endif%}">
                 <a class="nav-link" href="{{view_url}}">View Transactions</a>
             </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{{chart_url}}">Charts</a>
             </li>
+      {% endif %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+{% if user.is_authenticated %}
             <li class="nav-item {% if request.path == admin_url %} active {% endif %}">
-                <a class="nav-link" href="{% url 'admin:index' %}">Admin Panel</a>
+                <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
             </li>
+{% else %}
+            <li class="nav-item {% if request.path == admin_url %} active {% endif %}">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            </li>
+            <li class="nav-item {% if request.path == admin_url %} active {% endif %}">
+                <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+            </li>
+{% endif %}
         </ul>
     </div>
 </nav>
+

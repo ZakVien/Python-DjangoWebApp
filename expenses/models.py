@@ -1,15 +1,18 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
 
 class Deposit(models.Model):
+    account = models.IntegerField()
     date = models.DateField('Deposit Date')
     amount = models.DecimalField(max_digits=7, decimal_places=2)
     category = models.ForeignKey(
         'Category',
         on_delete=models.CASCADE,
-        limit_choices_to={'category': 'Deposit'}
+        limit_choices_to={'category': 'Deposit'},
+        default='----'
     )
 
     def __str__(self):
@@ -18,6 +21,7 @@ class Deposit(models.Model):
 
 
 class Expense(models.Model):
+    account = models.IntegerField()
     date = models.DateField('Transaction Date')
     category = models.ForeignKey(
         'Category',
@@ -43,6 +47,7 @@ class Category(models.Model):
 
 
 class ExpenseItem(models.Model):
+    account = models.IntegerField()
     ExpenseList = models.ForeignKey(Expense, on_delete=models.CASCADE)
     text = models.CharField(max_length=300)
 
