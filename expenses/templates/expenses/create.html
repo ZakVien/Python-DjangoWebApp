@@ -9,12 +9,12 @@
 <div class="row">
   <div class="col-3"></div>
   <div class="col-6">
-    <form method="post" action="/create/">
+    <form method="post" action="/new-expense/">
       {% csrf_token %}
       {{form|crispy}}
       <div class="text-center">
         <button type="submit" class="btn btn-primary" name="Save">Submit</button>
-        <a class="btn btn-warning" href="/">Cancel</a>
+        <a class="btn btn-warning" href="/all-expenses">Cancel</a>
       </div>
     </form>
 

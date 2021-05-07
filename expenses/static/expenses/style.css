@@ -1,59 +1,154 @@
-/*
-body {
-    background-image: url('purple-black-background.jpg');
-}
+/* Container Styles */
 .container {
     min-height: 100vh;
-    background-color: rgba(0, 0, 0, 0.98);
+    background-color: rgba(233, 230, 255, 1);
+    padding-left: 0;
+    padding-right: 0;
 }
-body, td, tr, nav a {
-    color: #958adb;
+
+
+/* Navbar Styles */
+.bg-light {
+    background-color: rgba(124, 115, 196, 1) !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(65, 60, 99, 1);
     font-weight: 600;
 }
-*/
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link:hover{
+    color: rgba(232, 230, 241, 1);
+    font-weight: 600;
+}
+
 a:hover, label:hover {
     cursor: pointer;
 }
+
+/* Content Styles */
+#content {
+    padding: 1em 3em;
+    min-height: calc(100vh - 60px);
+}
+
+#content h2 {
+    padding: 0 0 1em 0;
+}
+
+p, a, label, input {
+    font-size: 18px;
+}
+
+a {
+    font-weight: bold;
+    color: rgba(65, 60, 99, 1);
+}
+
+button {
+    background-color: rgba(65, 60, 99, 1);
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 8px 20px;
+    color: rgba(232, 230, 241, 1);
+    font-weight: bold;
+}
+
+button:hover, button:active, button:focus {
+    background-color: rgba(232, 230, 241, 1);
+    border: 1px solid rgba(65, 60, 99, 1);
+    color: rgba(65, 60, 99, 1);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: rgba(65, 60, 99, 1);
+    color: rgba(232, 230, 241, 1);
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+.btn-primary:hover {
+    background-color: red;
+    border: none;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:active:focus {
+    background-color: rgba(232, 230, 241, 1) !important;
+    color: rgba(65, 60, 99, 1);
+    border: 1px solid rgba(65, 60, 99, 1) !important;
+    box-shadow: none !important;
+}
+
+
+.btn-warning {
+    background-color: rgba(40, 37, 60, 1);
+    color: rgba(232, 230, 241, 1);
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+.btn-warning:hover {
+    background-color: red;
+    border: none;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning:active:focus {
+    background-color: rgba(232, 230, 241, 1) !important;
+    color: rgba(65, 60, 99, 1);
+    border: 1px solid rgba(65, 60, 99, 1) !important;
+    box-shadow: none !important;
+}
+
+
+.btn-danger {
+    background-color: rgba(48, 22, 213, 1);
+    color: rgba(232, 230, 241, 1);
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+}
+.btn-danger:hover {
+    background-color: red;
+    border: none;
+}
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active,
+.btn-danger:active:focus {
+    background-color: rgba(232, 230, 241, 1) !important;
+    color: rgba(65, 60, 99, 1);
+    border: 1px solid rgba(65, 60, 99, 1) !important;
+    box-shadow: none !important;
+}
+
+/* Home page */
+.welcome {
+    line-height: 1.8em;
+    padding-bottom: 2em;
+}
+
+/* Log in Page Styles */
+.errorlist.nonfield {
+    color: rgba(216, 32, 32, 1);
+}
+
+/* Sign Up Page Styles */
+.helptext {
+    display: block;
+    color: rgba(216, 32, 32, 1);
+    padding: 5px;
+}
+
+
+/* Special Styles */
 #date_range_error {
     color: red;
     margin-bottom: 0;
 }
-/*
-select, option, .form-control, .form-control:focus {
-    background: #b8b1e7;
-    color: rgb(71, 54, 176);
-    font-weight: 600;
-    border-color: rgba(149, 138, 219, 0.6);
-}
-
-
-.btn-primary {
-    background: rgba(71, 54, 176, 0.6);
-    color: rgba(184, 177, 231, 1);
-    font-weight: 600;
-    border-color: rgba(149, 138, 219, 0.6);
-}
-.btn-primary:hover, .btn-primary:focus,
-.btn-primary:active:focus, .btn-primary.active {
-    background: rgba(71, 54, 176, 1);
-    color: rgba(184, 177, 231, 1);
-    border-color: rgba(149, 138, 219, 1);
-}
-
-.btn-danger {
-    background: rgba(131, 2, 101, 0.6);
-    color: rgba(255ssss, 255, 255, 0.8);
-    font-weight: 600;
-    border-color: rgba (131, 2, 101, 0.4);
-}
-.btn-danger:hover, .btn-danger:focus,
-.btn-danger:active:focus, .btn-danger.active {
-    background: rgba(181, 3, 140, 0.6);
-    color: rgba(255ssss, 255, 255, 0.8);
-    font-weight: 600;
-    border-color: rgba (131, 2, 101, 0.4);
-}
-.btn-warning:active:focus, .btn-warning.active {
-
-}
-*/

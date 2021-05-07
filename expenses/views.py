@@ -9,6 +9,8 @@ from django.views import generic
 
 
 def home(response):
+    if response.user.is_authenticated:
+        return redirect('view_all_expenses')
     return render(response, "expenses/index.html", {})
 
 
@@ -114,7 +116,7 @@ def edit(response, id):
             ls.amount = amount
 
             ls.save()
-            return HttpResponseRedirect("/expenses/")
+            return HttpResponseRedirect("/all-expenses/")
         else:
             return render(response, "expenses/edit.html", {"form": form, "ls": ls})
 
@@ -127,7 +129,7 @@ def remove(response, id):
 
     ls = Expense.objects.get(id=id)
     ls.delete()
-    return HttpResponseRedirect("/expenses")
+    return HttpResponseRedirect("/all-expenses")
 
 
 def chart(response):
@@ -283,27 +285,5 @@ def chart(response):
         'label_size': label_size,
     })
 
-
-###########################################
-###########################################
-# CREATE METHODS FOR NECESSARY ############
-# CHARTS TO MAKE EACH CHART    ############
-# USEFUL                       ############
-# EX: LINE GRAPH SHOULD BE     ############
-# MONEY OVER TIME AND NOT      ############
-# COST PER TRANSACTION         ############
-###########################################
-
-# 4/4/21
-# Modify data so it accepts deposits for LINE graph ONLY
-# Then use JS so when LINE graph is selected,
-# radio options for Merchant/Category are not visible.
-# (And make sure they're visible if LINE graph IS NOT selected.)
-#
-# Line graph should show account value at the end of each transaction day
-# (If no transactions on 2/3/21, then don't show 2/3/21, duh. (Aka leave as-is)
-#
-
-# Add filters to select DATE RANGE
 
 
